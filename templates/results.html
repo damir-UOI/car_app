@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>Driver Results</h1>
+
+<table>
+
+<tr>
+
+<th>Rank</th>
+<th>ID</th>
+<th>Name</th>
+<th>License</th>
+<th>Best Time</th>
+
+</tr>
+
+{% for driver in results %}
+
+<tr>
+
+<td>{{ loop.index }}</td>
+
+<td>{{ driver[0] }}</td>
+
+<td>{{ driver[1] }}</td>
+
+<td>{{ driver[2] }}</td>
+
+<td>{{ driver[3] }}</td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+{% endblock %}

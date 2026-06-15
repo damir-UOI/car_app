@@ -354,6 +354,237 @@ def search():
     )
 
 
+@app.route("/results")
+def results():
+
+    conn = sqlite3.connect(DB_PATH)
+
+    cursor = conn.cursor()
+
+    # Load drivers
+
+    cursor.execute(
+        """
+        SELECT *
+        FROM drivers
+        """
+    )
+
+    drivers = cursor.fetchall()
+
+    # Load runs with course names
+
+    cursor.execute(
+        """
+
+        SELECT
+
+        runs.driver_id,
+
+        courses.course_name,
+
+        runs.run_time,
+
+        runs.cones
+
+        FROM runs
+
+        JOIN courses
+
+        ON runs.course_id = courses.id
+
+        """
+    )
+
+    runs = cursor.fetchall()
+
+    conn.close()
+
+    driver_results_list = []
+
+    for driver_id, name, license_type in drivers:
+
+        adjusted_time_a = None
+
+        adjusted_time_b = None
+
+        for d_id, course_name, run_time, cones in runs:
+
+            if d_id == driver_id:
+
+                current_adjusted_time = (
+                    run_time + (cones * 2)
+                )
+
+                if course_name == "Course A":
+
+                    if (
+                        adjusted_time_a is None
+                        or current_adjusted_time < adjusted_time_a
+                    ):
+
+                        adjusted_time_a = (
+                            current_adjusted_time
+                        )
+
+                elif course_name == "Course B":
+
+                    if (
+                        adjusted_time_b is None
+                        or current_adjusted_time < adjusted_time_b
+                    ):
+
+                        adjusted_time_b = (
+                            current_adjusted_time
+                        )
+
+        # Determine best overall time
+
+        if (
+            adjusted_time_a is not None
+            and adjusted_time_b is not None
+        ):
+
+            best_overall_time = min(
+                adjusted_time_a,
+                adjusted_time_b
+            )
+
+        elif adjusted_time_a is not None:
+
+            best_overall_time = adjusted_time_a
+
+        elif adjusted_time_b is not None:
+
+            best_overall_time = adjusted_time_b
+
+        else:
+
+            best_overall_time = "N/A"
+
+        driver_results_list.append(
+
+            (
+
+                driver_id,
+
+                name,
+
+                license_type,
+
+                best_overall_time
+
+            )
+
+        )
+
+    # Sort by best overall time
+
+    sorted_driver_results = sorted(
+
+        driver_results_list,
+
+        key=lambda x:
+
+        (
+
+            x[3]
+
+            if isinstance(
+                x[3],
+                (int, float)
+            )
+
+            else float("inf")
+
+        )
+
+    )
+
+    return render_template(
+
+        "results.html",
+
+        results=sorted_driver_results
+
+    )
+
+
+@app.route("/cones")
+def cones():
+
+    conn = sqlite3.connect(
+        DB_PATH
+    )
+
+    cursor = conn.cursor()
+
+    # Load drivers
+
+    cursor.execute(
+        """
+        SELECT *
+        FROM drivers
+        """
+    )
+
+    drivers = cursor.fetchall()
+
+    # Load runs
+
+    cursor.execute(
+        """
+        SELECT
+
+        driver_id,
+
+        cones
+
+        FROM runs
+        """
+    )
+
+    runs = cursor.fetchall()
+
+    conn.close()
+
+    cones_stats_list = []
+
+    for driver_id, name, license_type in drivers:
+
+        cones_counter = 0
+
+        for d_id, cones in runs:
+
+            if d_id == driver_id:
+
+                cones_counter += cones
+
+        if cones_counter > 0:
+
+            cones_stats_list.append(
+
+                (
+
+                    name,
+
+                    cones_counter,
+
+                    "∆" * cones_counter
+
+                )
+
+            )
+
+    return render_template(
+
+        "cones.html",
+
+        stats=cones_stats_list
+
+    )
+
+
 
 
 

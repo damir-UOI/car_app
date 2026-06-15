@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>Cone Statistics</h1>
+
+<table>
+
+<tr>
+
+    <th>Driver</th>
+
+    <th>Total Cones</th>
+
+    <th>Graph</th>
+
+</tr>
+
+{% for row in stats %}
+
+<tr>
+
+    <td>{{ row[0] }}</td>
+
+    <td>{{ row[1] }}</td>
+
+    <td>{{ row[2] }}</td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+{% endblock %}
