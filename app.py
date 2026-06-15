@@ -585,6 +585,102 @@ def cones():
     )
 
 
+@app.route(
+    "/remove_run",
+    methods=["GET", "POST"]
+)
+
+def remove_run():
+
+    message = None
+
+    if request.method == "POST":
+
+        try:
+
+            run_id = int(
+                request.form["run_id"]
+            )
+
+        except ValueError:
+
+            return render_template(
+
+                "remove_run.html",
+
+                message="Run ID must be a number."
+
+            )
+
+        conn = sqlite3.connect(
+            DB_PATH
+        )
+
+        cursor = conn.cursor()
+
+        cursor.execute(
+
+            """
+
+            SELECT *
+
+            FROM runs
+
+            WHERE id = ?
+
+            """,
+
+            (run_id,)
+
+        )
+
+        run = cursor.fetchone()
+
+        if run is None:
+
+            conn.close()
+
+            return render_template(
+
+                "remove_run.html",
+
+                message="Run ID not found."
+
+            )
+
+        cursor.execute(
+
+            """
+
+            DELETE FROM runs
+
+            WHERE id = ?
+
+            """,
+
+            (run_id,)
+
+        )
+
+        conn.commit()
+
+        conn.close()
+
+        return render_template(
+
+            "remove_run.html",
+
+            message=f"Run {run_id} deleted successfully."
+
+        )
+
+    return render_template(
+
+        "remove_run.html",
+
+        message=None
+
+    )
 
 
 

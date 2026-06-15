@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>Remove Run</h1>
+
+<form method="POST">
+
+    <p>
+
+        Run ID:
+
+        <input
+
+            type="number"
+
+            name="run_id"
+
+            required
+
+        >
+
+    </p>
+
+    <p>
+
+        <input
+
+            type="submit"
+
+            value="Delete Run"
+
+        >
+
+    </p>
+
+</form>
+
+{% if message %}
+
+<p class="error-message">
+
+    {{ message }}
+
+</p>
+
+{% endif %}
+
+{% endblock %}
