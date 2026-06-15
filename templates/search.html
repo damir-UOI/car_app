@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>Search Drivers</h1>
+
+<form method="POST">
+
+    <input
+        type="text"
+        name="search_term"
+        placeholder="Enter driver name"
+        required>
+
+    <input
+        type="submit"
+        value="Search">
+
+</form>
+
+<br>
+
+{% if results %}
+
+<h2>Results</h2>
+
+<table>
+
+    <tr>
+
+        <th>ID</th>
+
+        <th>Name</th>
+
+        <th>License Type</th>
+
+    </tr>
+
+    {% for driver in results %}
+
+    <tr>
+
+        <td>{{ driver[0] }}</td>
+
+        <td>{{ driver[1] }}</td>
+
+        <td>{{ driver[2] }}</td>
+
+    </tr>
+
+    {% endfor %}
+
+</table>
+
+{% endif %}
+
+
+{% if message %}
+
+<p class="error-message">
+
+    {{ message }}
+
+</p>
+
+{% endif %}
+
+
+{% endblock %}

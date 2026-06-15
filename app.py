@@ -291,5 +291,71 @@ def add_run():
 
 
 
+#Search route
+@app.route(
+    "/search",
+    methods=["GET", "POST"]
+)
+def search():
+
+    results = []
+    
+    message = None
+    
+    if request.method == "POST":
+
+        search_term = request.form[
+            "search_term"
+        ].strip()
+
+        conn = sqlite3.connect(
+            DB_PATH
+        )
+
+        cursor = conn.cursor()
+
+        cursor.execute(
+
+            """
+
+            SELECT *
+
+            FROM drivers
+
+            WHERE name
+
+            LIKE ?
+
+            """,
+
+            (
+
+                f"%{search_term}%",
+
+            )
+
+        )
+
+        results = cursor.fetchall()
+
+        conn.close()
+        
+        if not results:
+            message = "No drivers found."
+
+    return render_template(
+
+        "search.html",
+
+        results=results,
+
+        message=message
+
+    )
+
+
+
+
+
 if __name__ == "__main__":
     app.run(debug=True)
