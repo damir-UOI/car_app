@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>Add Run</h1>
+
+<form method="POST">
+
+    <p>
+
+        Driver:
+
+        <select name="driver_id">
+
+            {% for driver in drivers %}
+
+            <option value="{{ driver[0] }}">
+
+                {{ driver[1] }}
+
+            </option>
+
+            {% endfor %}
+
+        </select>
+
+    </p>
+
+    <p>
+
+        Course:
+
+        <select name="course_id">
+
+            {% for course in courses %}
+
+            <option value="{{ course[0] }}">
+
+                {{ course[1] }}
+
+            </option>
+
+            {% endfor %}
+
+        </select>
+
+    </p>
+
+    <p>
+
+        Run Time:
+
+        <input
+            type="number"
+            name="run_time"
+            step="0.01"
+            min="0"
+            required>
+
+    </p>
+
+    <p>
+
+        Cones:
+
+        <input
+            type="number"
+            name="cones"
+            min="0"
+            value="0"
+            required>
+
+    </p>
+
+    <p>
+
+        <input
+            type="submit"
+            value="Add Run">
+
+    </p>
+
+</form>
+
+<p>
+
+    <a href="/runs">
+
+        Back to Runs
+
+    </a>
+
+</p>
+
+{% endblock %}

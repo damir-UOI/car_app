@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+
+{% if error %}
+
+<p class="error-message">
+
+    {{ error }}
+
+</p>
+
+{% endif %}
+
+
+<h1>Add Driver</h1>
+
+<form method="POST">
+
+    Name:
+
+    <input
+        type="text"
+        name="name">
+
+    <br><br>
+
+    License Type:
+
+    <select name="license_type">
+
+        <option>Learner</option>
+
+        <option>Restricted</option>
+
+        <option>Full</option>
+
+    </select>
+
+    <br><br>
+
+    <input
+        type="submit"
+        value="Add Driver">
+
+</form>
+
+{% endblock %}
